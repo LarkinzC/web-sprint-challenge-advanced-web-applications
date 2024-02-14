@@ -7,14 +7,14 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
 
-  const { setCurrentArticleId, postArticle, currentArticle } = props
+  const { setCurrentArticleId, postArticle, currentArticle, currentArticleId } = props
 
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-    if (currentArticle) {
+    if (currentArticleId) {
       setValues({
         title: currentArticle.title,
         text: currentArticle.text,

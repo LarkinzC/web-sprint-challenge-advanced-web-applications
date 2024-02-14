@@ -142,9 +142,10 @@ export default function App() {
                   postArticle={postArticle}
                   updateArticle={updateArticle}
                   setCurrentArticleId={setCurrentArticleId}
-                  currentArticle={articles.filter(art => {
-                    art.article_id !== currentArticleId
+                  currentArticle={articles.find(art => {
+                    art.article_id === currentArticleId
                   })}
+                  currentArticleId={currentArticleId}
                 />
                 <Articles
                   articles={articles}
