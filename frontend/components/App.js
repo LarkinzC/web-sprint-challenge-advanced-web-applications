@@ -73,16 +73,16 @@ export default function App() {
       })
       .then((res) => {
         setMessage(res.data.message);
-        // axios
-        //   .get("http://localhost:9000/api/articles", {
-        //     headers: { authorization: token },
-        //   })
-        //   .then((res) => {
-        //     setArticles(res.data.articles);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        axios
+          .get("http://localhost:9000/api/articles", {
+            headers: { authorization: token },
+          })
+          .then((res) => {
+            setArticles(res.data.articles);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -91,9 +91,23 @@ export default function App() {
     // to inspect the response from the server.
   };
 
-  const updateArticle = ({ article_id, article }) => {
-    // ✨ implement
-    // You got this!
+  const updateArticle = ({ currentArticleId, values }) => {
+    const token = localStorage.getItem("token")
+    console.log(currentArticleId, values)
+    axios.put(`http://localhost:9000/api/articles/${currentArticleId}`, values, {headers:{ authorization: token}} )
+    .then(res=> {
+      console.log(res)
+      setMessage(res.data.message)
+      setArticles(articles.map(article => {
+        if (article.article_id === res.data.article.article_id) {
+          return res.data.article;
+        } else {
+          return article;
+        }
+      }));
+      console.log('update', articles)
+    })
+    .catch(err => console.log(err))
   };
 
   const deleteArticle = (article_id) => {
@@ -104,14 +118,15 @@ export default function App() {
       })
       .then((res) => {
         setMessage(res.data.message);
+        setArticles(articles.filter((art) => art.article_id !== article_id))
       })
       .catch((err) => {
         console.log(err);
       });
 
-    setArticles(articles.filter((art) => art.article_id !== article_id));
+    
   };
-  console.log( 'APP', currentArticleId)
+
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
@@ -142,10 +157,8 @@ export default function App() {
                   postArticle={postArticle}
                   updateArticle={updateArticle}
                   setCurrentArticleId={setCurrentArticleId}
-                  currentArticle={articles.find(art => {
-                    art.article_id === currentArticleId
-                  })}
                   currentArticleId={currentArticleId}
+                  articles={articles}
                 />
                 <Articles
                   articles={articles}
